@@ -56,18 +56,77 @@ class Admin {
 
 	/**
 	 * Load assets file in admin
+	 *
+	 * @param $hook
 	 */
-	public function admin_assets() {
-		global $pagenow;
+	public function admin_assets( $hook ) {
 
-		//List Allow This Script
-		//if ( $pagenow == "edit-comments.php" || $pagenow == "edit.php" ) {
+		//Add Admin Asset
+		if ( self::in_page( self::$admin_page_slug ) ) {
+			wp_enqueue_style( 'realty-bloc-log', \REALTY_BLOC_LOG::$plugin_url . '/dist/css/admin.min.css', array(), \REALTY_BLOC_LOG::$plugin_version, 'all' );
+			wp_enqueue_script( 'realty-bloc-log', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/admin.min.js', array( 'jquery' ), self::version(), false );
+			wp_localize_script( 'realty-bloc-log', 'rbl_global', self::global_var_js( $hook ) );
+		}
 
-		//Jquery Raty
-		//wp_enqueue_style( 'jquery-raty', WP_REVIEWS_INSURANCE::$plugin_url . '/asset/jquery-raty/jquery.raty.css', array(), WP_REVIEWS_INSURANCE::$plugin_version, 'all' );
-		//wp_enqueue_script( 'jquery-raty', WP_REVIEWS_INSURANCE::$plugin_url . '/asset/jquery-raty/jquery.raty.js', array( 'jquery' ), WP_REVIEWS_INSURANCE::$plugin_version, false );
+	}
 
-		//}
+	/**
+	 * Get Version of File
+	 *
+	 * @param $ver
+	 * @return bool
+	 */
+	public static function version( $ver = false ) {
+		if ( $ver ) {
+			return $ver;
+		} else {
+			if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+				return time();
+			} else {
+				return \REALTY_BLOC_LOG::$plugin_version;
+			}
+		}
+	}
+
+	/**
+	 * Prepare global WP-Statistics data for use Admin Js
+	 *
+	 * @param $hook
+	 * @return mixed
+	 */
+	public static function global_var_js( $hook ) {
+
+		//Global Option
+		$list['options'] = array(
+			'rtl'       => ( is_rtl() ? 1 : 0 ),
+			'gutenberg' => ( \REALTY_BLOC_LOG\Core\Utility\Admin::is_gutenberg() ? 1 : 0 )
+		);
+
+		// WordPress Current Page
+		$list['page'] = $hook;
+
+		// WordPress Admin Page request Params
+		if ( isset( $_GET ) ) {
+			foreach ( $_GET as $key => $value ) {
+				if ( $key != "page" ) {
+					$list['request'][ $key ] = $value;
+				}
+			}
+		}
+
+		// Global Lang
+		$list['i18n'] = array(
+			'more_detail' => __( 'More Details', 'wp-statistics' ),
+			'reload'      => __( 'Reload', 'wp-statistics' ),
+			'please_wait' => __( 'Please Wait ...', 'wp-statistics' ),
+		);
+
+		// Rest-API Meta Box Url
+		$list['ajax_url'] = admin_url( 'admin-ajax.php' );
+		$list['wp_nonce'] = wp_create_nonce( 'wp_rest' );
+
+		// Return Data JSON
+		return $list;
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 namespace REALTY_BLOC_LOG\Admin;
 
-use REALTY_BLOC_LOG\Core\Utility\Admin_UI;
+use REALTY_BLOC_LOG\Core\Utility\Admin;
 
 class Log_List {
 
@@ -28,7 +28,7 @@ class Log_List {
 
 
 		// Show Template Page
-		Admin_UI::get_template( array( 'layout/header', 'layout/title', 'layout/footer' ), $args );
+		Admin::get_template( array( 'layout/header', 'layout/title', 'layout/footer' ), $args );
 	}
 
 
