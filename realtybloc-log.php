@@ -27,7 +27,7 @@ class REALTY_BLOC_LOG {
 	 * @default production
 	 * @status Core
 	 */
-	public static $ENVIRONMENT = 'production';
+	public static $ENVIRONMENT = 'development';
 
 	/**
 	 * Use Template Engine
@@ -152,6 +152,7 @@ class REALTY_BLOC_LOG {
 	 * Activation Hook
 	 */
 	public static function activate() {
+		global $wpdb;
 
 		// Load DB delta
 		if ( ! function_exists( 'dbDelta' ) ) {
@@ -159,18 +160,33 @@ class REALTY_BLOC_LOG {
 		}
 
 		// Charset Collate
-		$collate = DB::charset_collate();
+		$collate = $wpdb->get_charset_collate();
 
-		// Users Online Table
-		$create_user_online_table = ( "
-					CREATE TABLE `tbl_name` (
-						ID int(11) NOT NULL AUTO_INCREMENT,
-	  					ip varchar(60) NOT NULL
+		// Create Realty Log Table
+		$create_realty_log_tbl = ( "
+					CREATE TABLE `{$wpdb->prefix}realtybloc_log` (
+						`ID` bigint(200) UNSIGNED NOT NULL AUTO_INCREMENT,
+						`site` varchar(255) NOT NULL,
+						`user_id` bigint(200) NOT NULL,
+						`data_id` bigint(200) NOT NULL,
+						`date` datetime NOT NULL,
+						`type` varchar(50) NOT NULL,
 						PRIMARY KEY  (ID)
 					) {$collate}" );
-		dbDelta( $create_user_online_table );
+		dbDelta( $create_realty_log_tbl );
 
+		// Create Data Table
+		$create_realty_log_data_tbl = ( "
+						CREATE TABLE `{$wpdb->prefix}realtybloc_meta` (
+						`meta_id` bigint(200) UNSIGNED NOT NULL AUTO_INCREMENT,
+						`log_id` bigint(200) NOT NULL,
+						`meta_key` varchar(255) NOT NULL,
+						`meta_val` longtext NOT NULL,
+						PRIMARY KEY (`meta_id`)
+					) {$collate}" );
+		dbDelta( $create_realty_log_data_tbl );
 	}
+
 }
 
 //Load Plugin

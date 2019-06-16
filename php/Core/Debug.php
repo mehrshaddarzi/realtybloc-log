@@ -74,6 +74,7 @@ class Debug {
 	 * Admin Area Test Code
 	 */
 	public function plugin_admin_test() {
+		global $wpdb;
 		if ( isset( $_REQUEST[ self::$global_request ] ) ) {
 
 			exit;
