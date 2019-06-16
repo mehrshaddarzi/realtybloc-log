@@ -1,0 +1,21 @@
+// Define
+$image_path: "../images";
+
+// Prefix Of Class
+$prefix: rbl;
+
+// Global
+@import "global";
+
+// WordPress Admin Component
+@import "component/print";
+@import "component/admin-bar";
+@import "component/pagination";
+@import "component/editor";
+@import "component/meta-box";
+@import "component/btn-group";
+@import "component/placeholder/placeholder-loading";
+@import "component/jquery-datepicker/datepicker";
+@import "component/badge";
+
+// WordPress Admin Page

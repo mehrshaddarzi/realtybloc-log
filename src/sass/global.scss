@@ -1,0 +1,107 @@
+/* Color Style */
+.#{$prefix}-text-danger {
+  color: #DC3545 !important;
+}
+
+.#{$prefix}-text-success {
+  color: #459605 !important;
+}
+
+.#{$prefix}-text-warning {
+  color: #dc6b26 !important;
+}
+
+.#{$prefix}-text-muted {
+  color: #797979 !important;
+}
+
+/* Text Center */
+.#{$prefix}-center {
+  text-align: center !important;
+}
+
+/* Cursor Default */
+.#{$prefix}-cursor-default {
+  cursor: default;
+}
+
+/* Button Danger in WordPress Admin */
+.wp-core-ui .btn-danger {
+  background: rgba(186, 0, 0, 0.74);
+  border-color: rgba(170, 0, 0, 0.77) rgba(153, 0, 0, 0.74) rgba(153, 0, 0, 0.74);
+  box-shadow: 0 1px 0 rgba(153, 0, 0, 0.74);
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 0 -1px 1px rgba(153, 0, 0, 0.74), 1px 0 1px rgba(153, 0, 0, 0.74), 0 1px 1px rgba(153, 0, 0, 0.74), -1px 0 1px rgba(153, 0, 0, 0.74);
+
+  &:hover {
+    background: #c20000;
+    border-color: #990000;
+    color: #fff;
+  }
+
+  &:active {
+    background: rgba(170, 0, 0, 0.75);
+    border-color: rgba(153, 0, 0, 0.74);
+    box-shadow: inset 0 2px 0 rgba(153, 0, 0, 0.75);
+  }
+
+  &:focus {
+    box-shadow: 0 1px 0 rgba(170, 0, 0, 0.75), 0 0 2px 1px rgba(219, 51, 51, 0.75);
+    background: rgba(194, 0, 0, 0.75);
+    border-color: rgba(153, 0, 0, 0.75);
+    color: #fff;
+    outline: 0 !important;
+  }
+}
+
+.#{$prefix}-btn-inline {
+  vertical-align: -2px;
+  margin: 0 5px;
+}
+
+/* Margin */
+.#{$prefix}-m-top-20 {
+  margin-top: 20px;
+}
+
+/* Text Wrap */
+.#{$prefix}-text-wrap {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100% !important;
+}
+
+/* Width 100% */
+.#{$prefix}-width-100 {
+  width: 100% !important;
+}
+
+/* inline */
+.#{$prefix}-inline {
+  display: inline;
+}
+
+/* Admin Page Title */
+.#{$prefix}-page-title {
+  display: inline-block;
+  vertical-align: -15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+
+.#{$prefix}-title {
+  display: inline;
+  font-size: 1.6em;
+}
+
+/* Float */
+.#{$prefix}-pull-right {
+  float: right;
+}
+
+.#{$prefix}-pull-left {
+  float: left;
+}
