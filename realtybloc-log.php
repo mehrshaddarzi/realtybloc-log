@@ -120,7 +120,11 @@ class REALTY_BLOC_LOG {
 			'Settings',
 			'Admin',
 			'Front',
-			'Ajax'
+			'Ajax',
+			'Event',
+			'Event\\view',
+			'Event\\form',
+			'Event\\login'
 		);
 		foreach ( $autoload as $class ) {
 			$class_name = '\REALTY_BLOC_LOG\\' . $class;
@@ -168,9 +172,9 @@ class REALTY_BLOC_LOG {
 						`ID` bigint(200) UNSIGNED NOT NULL AUTO_INCREMENT,
 						`site` varchar(255) NOT NULL,
 						`user_id` bigint(200) NOT NULL,
-						`data_id` bigint(200) NOT NULL,
 						`date` datetime NOT NULL,
 						`type` varchar(50) NOT NULL,
+						`value` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
 						PRIMARY KEY  (ID)
 					) {$collate}" );
 		dbDelta( $create_realty_log_tbl );
