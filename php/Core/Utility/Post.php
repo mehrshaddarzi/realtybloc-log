@@ -3,7 +3,6 @@
 namespace REALTY_BLOC_LOG\Core\Utility;
 
 class Post {
-
 	/**
 	 * Get List Post From Post Type
 	 *
@@ -45,6 +44,34 @@ class Post {
 		}
 
 		return ( (int) $wpdb->get_var( $query ) > 0 ? true : false );
+	}
+
+	/**
+	 * Get List WordPress Post Type
+	 *
+	 * @param array $args
+	 * @return array
+	 * @see https://developer.wordpress.org/reference/functions/get_post_types/
+	 */
+	public static function get_list_post_type( $args = array() ) {
+
+		// Get Default WordPress Post Type
+		$post_types     = array( 'post', 'page' );
+
+		// Define the array of defaults
+		$defaults = array(
+			'public' => true,
+			'_builtin' => false
+		);
+		$args = wp_parse_args( $args, $defaults );
+
+		// Get List Post Type
+		$get_post_types = get_post_types( $args, 'names', 'and' );
+		foreach ( $get_post_types as $name ) {
+			$post_types[] = $name;
+		}
+
+		return $post_types;
 	}
 
 }

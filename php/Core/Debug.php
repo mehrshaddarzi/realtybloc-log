@@ -2,6 +2,10 @@
 
 namespace REALTY_BLOC_LOG\Core;
 
+use REALTY_BLOC_LOG\Core\Utility\Post;
+use REALTY_BLOC_LOG\Core\Utility\User;
+use REALTY_BLOC_LOG\Event;
+
 class Debug {
 
 	/**
@@ -77,6 +81,7 @@ class Debug {
 		global $wpdb;
 		if ( isset( $_REQUEST[ self::$global_request ] ) ) {
 
+			self::dump();
 			exit;
 		}
 	}

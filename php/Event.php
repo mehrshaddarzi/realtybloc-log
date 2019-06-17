@@ -8,14 +8,14 @@ class Event {
 	 */
 	public static function ls() {
 		return array(
-			'user' => array(
-				'title'  => __( 'User Event', 'realty-bloc-log' )
+			'login' => array(
+				'title' => __( 'User Event', 'realty-bloc-log' )
 			),
-			'form'  => array(
-				'title'  => __( 'Submit Form', 'realty-bloc-log' )
+			'form' => array(
+				'title' => __( 'Submit Form', 'realty-bloc-log' )
 			),
-			'view'  => array(
-				'title'  => __( 'Page View', 'realty-bloc-log' )
+			'view' => array(
+				'title' => __( 'Page View', 'realty-bloc-log' )
 			)
 		);
 	}
@@ -119,9 +119,41 @@ class Event {
 	}
 
 	/**
+	 * Get Event Number By Type
+	 *
+	 * @param array $args
+	 * @return mixed
+	 */
+	public static function get_event_number( $args = array() ) {
+		global $wpdb;
+
+		// Prepare Item
+		$defaults = array(
+			'type' => '',
+		);
+		$args     = wp_parse_args( $args, $defaults );
+
+		// Check Where Sql
+		$where = array();
+
+		// Check Type
+		if ( ! empty( $args['type'] ) ) {
+			$where[] = "`type` = '{$args['type']}'";
+		}
+
+		// Basic SQL
+		$sql = "SELECT COUNT(*) FROM `{$wpdb->prefix}realtybloc_log`";
+		if ( ! empty( $where ) ) {
+			$sql .= ' WHERE ' . implode( ' AND ', $where );
+		}
+
+		return $wpdb->get_var( $sql );
+	}
+
+	/**
 	 * Get WordPress Domain name
 	 */
 	public static function get_site_domain() {
-		return rtrim( preg_replace( '/^https?:\/\//', '', get_site_url() ), "/" );
+		return rtrim( preg_replace( '/^https?:\/\//', '', get_site_url() ), " / " );
 	}
 }

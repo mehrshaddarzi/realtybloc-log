@@ -2,9 +2,14 @@
 
 namespace REALTY_BLOC_LOG;
 
-use REALTY_BLOC_LOG\Admin\Log_List;
+use REALTY_BLOC_LOG\Admin\Wp_List_Table_Event_Log;
 
 class Admin {
+	/**
+	 * WP_List_Table object
+	 */
+	public $event_log_wp_list_table;
+
 	/**
 	 * Admin Page slug
 	 */
@@ -26,6 +31,19 @@ class Admin {
 		 * Register Script in Admin Area
 		 */
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
+		/**
+		 * Set Screen Option For WP_List_Table
+		 */
+		if ( self::in_page( self::$admin_page_slug ) and ! isset( $_GET['method'] ) ) {
+			add_filter( 'set-screen-option', array( $this, 'set_screen' ), 10, 3 );
+		}
+	}
+
+	/**
+	 * Screen Option
+	 */
+	public static function set_screen( $status, $option, $value ) {
+		return $value;
 	}
 
 	/**
@@ -134,9 +152,77 @@ class Admin {
 	 */
 	public function admin_menu() {
 		// Base Menu
-		add_menu_page( __( 'RealtyBloc', 'realty-bloc-log' ), __( 'RealtyBloc', 'realty-bloc-log' ), 'manage_options', self::$admin_page_slug, array( '\REALTY_BLOC_LOG\Admin\Log_List', 'view' ), 'dashicons-album', 6 );
+		add_menu_page( __( 'RealtyBloc', 'realty-bloc-log' ), __( 'RealtyBloc', 'realty-bloc-log' ), 'manage_options', self::$admin_page_slug, array( $this, 'admin_page' ), 'dashicons-album', 6 );
+
+		// Event Log
+		$hook = add_submenu_page( self::$admin_page_slug, __( 'Event Log', 'realty-bloc-log' ), __( 'Event Log', 'realty-bloc-log' ), 'manage_options', self::$admin_page_slug, array( $this, 'admin_page' ) );
+		add_action( "load-$hook", array( $this, 'screen_option' ) );
 
 		// Setting Page
 		add_submenu_page( self::$admin_page_slug, __( 'Settings', 'realty-bloc-log' ), __( 'Settings', 'realty-bloc-log' ), 'manage_options', self::$admin_page_slug . '-option', array( Settings::instance(), 'wedevs_plugin_page' ) );
 	}
+
+	/**
+	 * Screen options
+	 */
+	public function screen_option() {
+
+		if ( ! isset( $_GET['method'] ) ) {
+
+			//Set Screen Option
+			$option = 'per_page';
+			$args   = array( 'label' => __( "Item Per Page", 'realty-bloc-log' ), 'default' => 10, 'option' => 'rbl_event_log_per_page' );
+			add_screen_option( $option, $args );
+
+			//Load WP_List_Table
+			$this->event_log_wp_list_table = new Wp_List_Table_Event_Log();
+			$this->event_log_wp_list_table->prepare_items();
+		}
+
+	}
+
+	/**
+	 * Admin Page
+	 */
+	public function admin_page() {
+		if ( ! isset( $_GET['method'] ) ) {
+
+			self::wp_list_table( $this->event_log_wp_list_table );
+		} else {
+
+
+		}
+	}
+
+	/**
+	 * WP List Table static
+	 * @param $obj
+	 */
+	public static function wp_list_table( $obj ) {
+		?>
+		<div class="wrap wps_actions">
+			<h1 class="rbl-heading-inline"><?php echo __( "Event Log", 'realty-bloc-log' ); ?></h1>
+			<hr class="wp-header-end">
+
+			<div id="poststuff">
+				<div id="post-body" class="metabox-holder columns">
+					<div>
+						<div class="meta-box-sortables ui-sortable">
+							<?php $obj->views(); ?>
+							<form method="post" action="<?php echo remove_query_arg( array( 'alert' ) ); ?>">
+								<?php
+								/* $obj->search_box( __( "Search" ), 'nds-user-find' ); */
+								$obj->display();
+								?>
+							</form>
+						</div>
+					</div>
+				</div>
+				<br class="clear">
+			</div>
+		</div>
+		<?php
+	}
+
+
 }
