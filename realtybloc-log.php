@@ -98,7 +98,8 @@ class REALTY_BLOC_LOG {
 
 		//Get Option
 		self::$option = array(
-			'user_event' => ( get_option( 'rbl_user_event', false ) != false ? get_option( 'rbl_user_event' ) : array() )
+			'user_event' => ( get_option( 'rbl_user_event', false ) != false ? get_option( 'rbl_user_event' ) : array() ),
+			'form_event' => ( get_option( 'rbl_forms_event', false ) != false ? get_option( 'rbl_forms_event' ) : array() ),
 		);
 
 		//Get Plugin Version
