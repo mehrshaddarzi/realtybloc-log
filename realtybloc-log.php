@@ -98,8 +98,7 @@ class REALTY_BLOC_LOG {
 
 		//Get Option
 		self::$option = array(
-			'email' => get_option( 'realtybloc_log_opt' )
-
+			'user_event' => ( get_option( 'rbl_user_event', false ) != false ? get_option( 'rbl_user_event' ) : array() )
 		);
 
 		//Get Plugin Version
@@ -114,6 +113,9 @@ class REALTY_BLOC_LOG {
 
 		//Load Composer
 		include_once dirname( __FILE__ ) . '/vendor/autoload.php';
+
+		// Load Template function
+		include_once dirname( __FILE__ ) . '/functions.php';
 
 		//Load Class
 		$autoload = array(

@@ -101,9 +101,9 @@ class SettingAPI {
 		$no_save_section = array();
 		foreach ( $this->settings_sections as $section ) {
 			if ( isset( $section['desc'] ) && ! empty( $section['desc'] ) ) {
-				$section['desc'] = '<div class="inside">' . $section['desc'] . '</div>';
+				$section['desc'] = '<div class="inside" style="margin-top: -10px;color: #0073aa;">' . $section['desc'] . '</div>';
 				$callback        = function () use ( $section ) {
-					echo str_replace( '"', '\"', $section['desc'] );
+					echo str_replace( '"', '"', $section['desc'] );
 				};
 			} else if ( isset( $section['callback'] ) ) {
 				$callback = $section['callback'];
@@ -252,7 +252,8 @@ class SettingAPI {
 		$html .= sprintf( '<label for="wpuf-%1$s[%2$s]">', $args['section'], $args['id'] );
 		$html .= sprintf( '<input type="hidden" name="%1$s[%2$s]" value="off" />', $args['section'], $args['id'] );
 		$html .= sprintf( '<input type="checkbox" class="checkbox" id="wpuf-%1$s[%2$s]" name="%1$s[%2$s]" value="on" %3$s />', $args['section'], $args['id'], checked( $value, 'on', false ) );
-		$html .= sprintf( '%1$s</label>', $args['desc'] );
+		$html .= '</label>';
+		$html .= $this->get_field_description( $args );
 		$html .= '</fieldset>';
 
 		echo $html;
@@ -274,7 +275,6 @@ class SettingAPI {
 			$html    .= sprintf( '<input type="checkbox" class="checkbox" id="wpuf-%1$s[%2$s][%3$s]" name="%1$s[%2$s][%3$s]" value="%3$s" %4$s />', $args['section'], $args['id'], $key, checked( $checked, $key, false ) );
 			$html    .= sprintf( '%1$s</label><br>', $label );
 		}
-
 		$html .= $this->get_field_description( $args );
 		$html .= '</fieldset>';
 

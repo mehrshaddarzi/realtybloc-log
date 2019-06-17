@@ -8,16 +8,13 @@ class Event {
 	 */
 	public static function ls() {
 		return array(
-			'login' => array(
-				'status' => true,
-				'title'  => __( 'User Login', 'realty-bloc-log' )
+			'user' => array(
+				'title'  => __( 'User Event', 'realty-bloc-log' )
 			),
 			'form'  => array(
-				'status' => true,
 				'title'  => __( 'Submit Form', 'realty-bloc-log' )
 			),
 			'view'  => array(
-				'status' => true,
 				'title'  => __( 'Page View', 'realty-bloc-log' )
 			)
 		);

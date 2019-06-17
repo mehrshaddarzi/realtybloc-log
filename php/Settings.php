@@ -4,6 +4,7 @@ namespace REALTY_BLOC_LOG;
 
 use REALTY_BLOC_LOG\Core\SettingAPI;
 use REALTY_BLOC_LOG\Core\Utility\Post;
+use REALTY_BLOC_LOG\Core\Utility\User;
 
 /**
  * Class Settings
@@ -62,13 +63,13 @@ class Settings {
 	public function wedevs_admin_init() {
 		$sections = array(
 			array(
-				'id'    => 'wp_reviews_email_opt',
-				'desc'  => __( 'Basic email settings', 'realty-bloc-log' ),
-				'title' => __( 'Email', 'realty-bloc-log' )
+				'id'    => 'rbl_user_event',
+				'desc'  => __( 'User Event Log Setting', 'realty-bloc-log' ),
+				'title' => __( 'User Event', 'realty-bloc-log' )
 			),
 			array(
-				'id'    => 'wp_reviews_insurance_opt',
-				'title' => __( 'General', 'realty-bloc-log' )
+				'id'    => 'rbl_forms_event',
+				'title' => __( 'Form Submit Event', 'realty-bloc-log' )
 			),
 			array(
 				'id'    => 'wp_plugin_help',
@@ -78,6 +79,46 @@ class Settings {
 		);
 
 		$fields = array(
+			'rbl_user_event'           => array(
+				array(
+					'name'    => 'register',
+					'label'   => __( 'Register User', 'realty-bloc-log' ),
+					'desc'    => __( 'save user log when user is registered', 'realty-bloc-log' ),
+					'type'    => 'checkbox',
+					'default' => 'on'
+				),
+				array(
+					'name'    => 'login',
+					'label'   => __( 'Login', 'realty-bloc-log' ),
+					'desc'    => __( 'save user log when login success', 'realty-bloc-log' ),
+					'type'    => 'checkbox',
+					'default' => 'on'
+				),
+				array(
+					'name'    => 'fail',
+					'label'   => __( 'Fail Login', 'realty-bloc-log' ),
+					'desc'    => __( 'save user log when user login is failed', 'realty-bloc-log' ),
+					'type'    => 'checkbox',
+					'default' => 'on'
+				),
+				array(
+					'name'    => 'forget',
+					'label'   => __( 'Forget Password', 'realty-bloc-log' ),
+					'desc'    => __( 'save user log when user want to forget Password', 'realty-bloc-log' ),
+					'type'    => 'checkbox',
+					'default' => 'on'
+				),
+				array(
+					'name'    => 'role',
+					'label'   => __( 'Users Role', 'realty-bloc-log' ),
+					'desc'    => __( 'which User role do you want to Save Log ?', 'realty-bloc-log' ),
+					'type'    => 'multicheck',
+					'options' => User::get_role_list(),
+					'default' => array(
+						'subscriber' => 'subscriber'
+					)
+				)
+			),
 			'wp_reviews_email_opt'     => array(
 				array(
 					'name'    => 'from_email',
@@ -166,14 +207,14 @@ class Settings {
 				array(
 					'name'    => 'thanks_you_page_submit',
 					'label'   => __( 'Thanks submit page', 'realty-bloc-log' ),
-					'desc'   => __( 'Redirect To this Page after submit reviews by user', 'realty-bloc-log' ),
+					'desc'    => __( 'Redirect To this Page after submit reviews by user', 'realty-bloc-log' ),
 					'type'    => 'select',
 					'options' => Post::get_list_post( 'page' ),
 				),
 				array(
 					'name'    => 'thanks_you_page_confirm',
 					'label'   => __( 'Thanks confirm page', 'realty-bloc-log' ),
-					'desc'   => __( 'Redirect To this Page after confirm email by user', 'realty-bloc-log' ),
+					'desc'    => __( 'Redirect To this Page after confirm email by user', 'realty-bloc-log' ),
 					'type'    => 'select',
 					'options' => Post::get_list_post( 'page' ),
 				),
