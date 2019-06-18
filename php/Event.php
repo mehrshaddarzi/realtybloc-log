@@ -11,10 +11,10 @@ class Event {
 			'login' => array(
 				'title' => __( 'User Event', 'realty-bloc-log' )
 			),
-			'form' => array(
+			'form'  => array(
 				'title' => __( 'Submit Form', 'realty-bloc-log' )
 			),
-			'view' => array(
+			'view'  => array(
 				'title' => __( 'Page View', 'realty-bloc-log' )
 			)
 		);
@@ -155,5 +155,20 @@ class Event {
 	 */
 	public static function get_site_domain() {
 		return rtrim( preg_replace( '/^https?:\/\//', '', get_site_url() ), " / " );
+	}
+
+	/**
+	 * Get Event name
+	 *
+	 * @param $type
+	 * @return mixed
+	 */
+	public static function get_event_name( $type ) {
+		$list_event = self::ls();
+		if ( isset( $list_event[ $type ] ) ) {
+			return $list_event[ $type ]['title'];
+		}
+
+		return __( "Unknown", 'realty-bloc-log' );
 	}
 }

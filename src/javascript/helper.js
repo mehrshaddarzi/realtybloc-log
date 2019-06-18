@@ -22,7 +22,9 @@ rbl_js.date_picker = function () {
             onSelect: function (selectedDate) {
                 let ID = jQuery(this).attr("data-wps-date-picker");
                 if (selectedDate.length > 0) {
-                    jQuery("input[id=date-" + ID + "]").val(selectedDate);
+                    if (rbl_js.exist_tag("input[id=date-" + ID + "]")) {
+                        jQuery("input[id=date-" + ID + "]").val(selectedDate);
+                    }
                 }
             }
         });

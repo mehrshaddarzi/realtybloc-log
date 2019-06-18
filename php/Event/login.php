@@ -121,4 +121,18 @@ class login {
 		return false;
 	}
 
+	/**
+	 * Get Action name
+	 *
+	 * @return array
+	 */
+	public static function act_name() {
+		return array(
+			'forget'   => __( "Forget Password", "realty-bloc-log" ),
+			'fail'     => __( "Failed Login", "realty-bloc-log" ),
+			'success'    => __( "Success Login", "realty-bloc-log" ),
+			'register' => __( "Register in site", "realty-bloc-log" )
+		);
+	}
+
 }

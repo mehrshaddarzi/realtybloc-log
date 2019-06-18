@@ -37,6 +37,18 @@ class Admin {
 		if ( self::in_page( self::$admin_page_slug ) and ! isset( $_GET['method'] ) ) {
 			add_filter( 'set-screen-option', array( $this, 'set_screen' ), 10, 3 );
 		}
+		/**
+		 * Admin Notice
+		 */
+		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+		/**
+		 * Set List Table Redirect
+		 */
+		add_action( 'admin_init', array( $this, 'set_list_table_redirect' ) );
+		/**
+		 * Admin List Table Css
+		 */
+		add_action( 'admin_head', array( $this, 'wp_list_table_css' ) );
 	}
 
 	/**
@@ -81,11 +93,113 @@ class Admin {
 
 		//Add Admin Asset
 		if ( self::in_page( self::$admin_page_slug ) ) {
+
+			// Load Date Picker
+			wp_enqueue_script( 'jquery-ui-datepicker' );
+			wp_localize_script( 'jquery-ui-datepicker', 'wps_i18n_jquery_datepicker', self::localize_jquery_datepicker() );
+
+			// Select 2
+			wp_enqueue_script( 'select2', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/select2/select2.full.min.js', array( 'jquery' ), '4.0.7' );
+			wp_enqueue_style( 'select2', \REALTY_BLOC_LOG::$plugin_url . '/dist/css/select2/select2.min.css', array(), '4.0.7' );
+
+			// Load Main Script
 			wp_enqueue_style( 'realty-bloc-log', \REALTY_BLOC_LOG::$plugin_url . '/dist/css/admin.min.css', array(), \REALTY_BLOC_LOG::$plugin_version, 'all' );
 			wp_enqueue_script( 'realty-bloc-log', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/admin.min.js', array( 'jquery' ), self::version(), false );
 			wp_localize_script( 'realty-bloc-log', 'rbl_global', self::global_var_js( $hook ) );
 		}
 
+	}
+
+	/*
+	 * Set init redirect in wp_list_table
+	 */
+	public function set_list_table_redirect() {
+		if ( self::in_page( Admin::$admin_page_slug ) and ! isset( $_GET['method'] ) ) {
+
+			//Redirect For $_POST Form Performance
+			foreach ( array( "s", "user_id", "from", "to" ) as $post ) {
+				if ( isset( $_POST[ $post ] ) and ! empty( $_POST[ $post ] ) ) {
+
+					// Create Base Url
+					$args = array( 'page' => Admin::$admin_page_slug );
+
+					// Push Arg
+					foreach ( array( "s", "user_id", "from", "to" ) as $parameter ) {
+						if ( isset( $_POST[ $parameter ] ) and ! empty( $_POST[ $parameter ] ) ) {
+							$args[ $parameter ] = urlencode( $_POST[ $parameter ] );
+						}
+					}
+
+					// Check SUB SUB
+					if ( isset( $_REQUEST['type'] ) ) {
+						$args['type'] = urlencode( $_REQUEST['type'] );
+					}
+
+					// Redirect
+					wp_redirect( add_query_arg( $args, admin_url( "admin.php" ) ) );
+					exit;
+				}
+			}
+
+			//Remove Admin Notice From Pagination
+			if ( isset( $_GET['alert'] ) and isset( $_GET['paged'] ) ) {
+				wp_redirect( remove_query_arg( array( 'alert' ) ) );
+				exit;
+			}
+
+		}
+	}
+
+	/**
+	 * Wp List Table Column Css
+	 */
+	public function wp_list_table_css() {
+		if ( self::in_page( self::$admin_page_slug ) ) {
+			echo '<style>';
+			if ( ! isset( $_GET['method'] ) ) {
+				echo '
+				table.widefat th.column-event, table.widefat th.column-date {width: 210px;}
+				fieldset.columns-prefs { display: none; }
+				';
+			}
+			echo '</style>';
+		}
+	}
+
+	/**
+	 * Admin Notice
+	 */
+	public static function admin_notice() {
+		if ( self::in_page( self::$admin_page_slug ) and isset( $_GET['alert'] ) ) {
+			switch ( $_GET['alert'] ) {
+				case "delete":
+					\REALTY_BLOC_LOG\Core\Utility\Admin::wp_admin_notice( __( "Selected item has been Deleted.", 'realty-bloc-log' ), "success" );
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Localize jquery datepicker
+	 *
+	 * @see https://gist.github.com/mehrshaddarzi/7f661baeb5d801961deb8b821157e820
+	 */
+	public static function localize_jquery_datepicker() {
+		global $wp_locale;
+
+		return array(
+			'closeText'       => __( 'Done', 'realty-bloc-log' ),
+			'currentText'     => __( 'Today', 'realty-bloc-log' ),
+			'monthNames'      => Helper::strip_array_indices( $wp_locale->month ),
+			'monthNamesShort' => Helper::strip_array_indices( $wp_locale->month_abbrev ),
+			'monthStatus'     => __( 'Show a different month', 'realty-bloc-log' ),
+			'dayNames'        => Helper::strip_array_indices( $wp_locale->weekday ),
+			'dayNamesShort'   => Helper::strip_array_indices( $wp_locale->weekday_abbrev ),
+			'dayNamesMin'     => Helper::strip_array_indices( $wp_locale->weekday_initial ),
+			'dateFormat'      => 'yy-mm-dd', // Format time for Jquery UI
+			'firstDay'        => get_option( 'start_of_week' ),
+			'isRTL'           => (int) $wp_locale->is_rtl(),
+		);
 	}
 
 	/**
@@ -200,27 +314,26 @@ class Admin {
 	 */
 	public static function wp_list_table( $obj ) {
 		?>
-		<div class="wrap wps_actions">
-			<h1 class="rbl-heading-inline"><?php echo __( "Event Log", 'realty-bloc-log' ); ?></h1>
-			<hr class="wp-header-end">
+        <div class="wrap wps_actions">
+            <h1 class="rbl-heading-inline"><?php echo __( "Event Log", 'realty-bloc-log' ); ?></h1>
+            <hr class="wp-header-end">
 
-			<div id="poststuff">
-				<div id="post-body" class="metabox-holder columns">
-					<div>
-						<div class="meta-box-sortables ui-sortable">
+            <div id="poststuff">
+                <div id="post-body" class="metabox-holder columns">
+                    <div>
+                        <div class="meta-box-sortables ui-sortable">
 							<?php $obj->views(); ?>
-							<form method="post" action="<?php echo remove_query_arg( array( 'alert' ) ); ?>">
+                            <form method="post" action="<?php echo remove_query_arg( array( 'alert' ) ); ?>">
 								<?php
-								/* $obj->search_box( __( "Search" ), 'nds-user-find' ); */
 								$obj->display();
 								?>
-							</form>
-						</div>
-					</div>
-				</div>
-				<br class="clear">
-			</div>
-		</div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <br class="clear">
+            </div>
+        </div>
 		<?php
 	}
 
