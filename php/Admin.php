@@ -110,7 +110,7 @@ class Admin {
 			wp_localize_script( 'jquery-ui-datepicker', 'wps_i18n_jquery_datepicker', self::localize_jquery_datepicker() );
 
 			// Add Chart Js
-			wp_enqueue_script( 'chart.js', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/chartjs/chart.bundle.min.js' , false, '2.8.0', false );
+			wp_enqueue_script( 'chart.js', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/chartjs/chart.bundle.min.js', false, '2.8.0', false );
 
 			// Select 2
 			wp_enqueue_script( 'select2', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/select2/select2.full.min.js', array( 'jquery' ), '4.0.7' );
@@ -363,7 +363,7 @@ class Admin {
 	 */
 	public function disable_all_admin_notices() {
 		global $wp_filter;
-		if ( self::in_page( self::$admin_page_slug ) and ! isset( $_GET['alert'] ) ) {
+		if ( ( self::in_page( 'realtybloc-option' ) || self::in_page( self::$admin_page_slug ) ) and ! isset( $_GET['alert'] ) ) {
 			if ( isset( $wp_filter['user_admin_notices'] ) ) {
 				unset( $wp_filter['user_admin_notices'] );
 			}
