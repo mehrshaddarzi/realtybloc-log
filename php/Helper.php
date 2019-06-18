@@ -2,6 +2,7 @@
 
 namespace REALTY_BLOC_LOG;
 
+use REALTY_BLOC_LOG\Core\Utility\Timezone;
 use REALTY_BLOC_LOG\Core\Utility\User;
 
 /**
@@ -38,6 +39,16 @@ class Helper {
 		}
 
 		return $item;
+	}
+
+	public static function get_number_day_install_plugin() {
+		global $wpdb;
+		$first_day = $wpdb->get_var( "SELECT `date` FROM `{$wpdb->prefix}realtybloc_log` ORDER BY `ID` ASC LIMIT 1" );
+		if ( ! empty( $first_day ) ) {
+			return (int) Timezone::getNumberDayBetween( $first_day );
+		}
+
+		return 30;
 	}
 
 

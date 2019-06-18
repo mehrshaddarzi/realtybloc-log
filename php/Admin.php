@@ -2,6 +2,7 @@
 
 namespace REALTY_BLOC_LOG;
 
+use REALTY_BLOC_LOG\Admin\User_History;
 use REALTY_BLOC_LOG\Admin\Wp_List_Table_Event_Log;
 
 class Admin {
@@ -49,6 +50,12 @@ class Admin {
 		 * Admin List Table Css
 		 */
 		add_action( 'admin_head', array( $this, 'wp_list_table_css' ) );
+		/**
+		 * Remove Screen Option for custom Page
+		 */
+		if ( self::in_page( self::$admin_page_slug ) and isset( $_GET['method'] ) ) {
+			add_filter( 'screen_options_show_screen', '__return_false' );
+		}
 	}
 
 	/**
@@ -300,11 +307,18 @@ class Admin {
 	 */
 	public function admin_page() {
 		if ( ! isset( $_GET['method'] ) ) {
-
 			self::wp_list_table( $this->event_log_wp_list_table );
 		} else {
 
+			// Check User History Page
+			if ( $_GET['method'] == "user-history" and isset( $_GET['user_id'] ) and is_numeric( $_GET['user_id'] ) ) {
 
+				// Check Number User Event
+				$number = Event::get_event_number( array( 'user_id' => $_GET['user_id'] ) );
+				if ( $number > 0 ) {
+					User_History::view();
+				}
+			}
 		}
 	}
 

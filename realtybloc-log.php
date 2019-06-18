@@ -127,7 +127,8 @@ class REALTY_BLOC_LOG {
 			'Event',
 			'Event\\view',
 			'Event\\form',
-			'Event\\login'
+			'Event\\login',
+			'Admin\\User_History'
 		);
 		foreach ( $autoload as $class ) {
 			$class_name = '\REALTY_BLOC_LOG\\' . $class;
