@@ -113,8 +113,9 @@ class User_History {
 		$args['title'] = __( 'User History', 'wp-statistics' );
 
 		// Get Current Page Url
-		$args['pageName']             = 'realtybloc';
-		$args['custom_get']['method'] = 'user-history';
+		$args['pageName']              = 'realtybloc';
+		$args['custom_get']['method']  = 'user-history';
+		$args['custom_get']['user_id'] = $args['user_id'];
 
 		// Get Date-Range
 		$args['DateRang'] = self::DateRange();
@@ -123,8 +124,6 @@ class User_History {
 		$args['user']            = User::get( $args['user_id'] );
 		$args['user_name']       = User::get_name( $args['user_id'] );
 		$args['number_of_event'] = Event::get_event_number( array( 'user_id' => $args['user_id'] ) );
-
-
 
 
 		// Show Template Page
