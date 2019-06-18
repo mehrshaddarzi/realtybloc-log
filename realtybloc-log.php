@@ -27,7 +27,7 @@ class REALTY_BLOC_LOG {
 	 * @default production
 	 * @status Core
 	 */
-	public static $ENVIRONMENT = 'development';
+	public static $ENVIRONMENT = 'production';
 
 	/**
 	 * Use Template Engine

@@ -9,7 +9,6 @@ use REALTY_BLOC_LOG\Event;
 use REALTY_BLOC_LOG\Helper;
 
 class User_History {
-
 	/**
 	 * Default Pagination GET name
 	 *
@@ -77,7 +76,7 @@ class User_History {
 	public static function isValidDateRequest() {
 
 		// Get Default Time Ago days
-		$default_days_ago = Helper::get_number_day_install_plugin();
+		$default_days_ago = self::$time_ago_days;
 
 		// Check if not Request Params
 		if ( ! isset( $_GET[ self::$request_from_date ] ) and ! isset( $_GET[ self::$request_to_date ] ) ) {
@@ -125,9 +124,55 @@ class User_History {
 		$args['user_name']       = User::get_name( $args['user_id'] );
 		$args['number_of_event'] = Event::get_event_number( array( 'user_id' => $args['user_id'] ) );
 
+		// Get Total User Event
+		$args['user_event_total'] = array();
+		$label                    = array();
+		foreach ( Event::ls() as $key => $val ) {
+
+			$args['user_event_total'][ $key ] = array(
+				'count' => Event::get_event_number( array( 'type' => $key, 'user_id' => $args['user_id'] ) )
+			);
+
+			//push label
+			$label[ $key ] = $val['title'];
+		}
+
+		// Total By Chart And Date
+		$days_list = TimeZone::getListDays( array( 'from' => $args['DateRang']['from'], 'to' => $args['DateRang']['to'] ) );
+
+		// Get List Of Days
+		$days_time_list = array_keys( $days_list );
+		$date           = array();
+		foreach ( $days_list as $k => $v ) {
+			$date[] = $v['format'];
+		}
+
+		// Prepare title Hit Chart
+		$count_day = TimeZone::getNumberDayBetween( $args['DateRang']['from'], $args['DateRang']['to'] );
+
+		// Set Title
+		$title = sprintf( __( 'Event log from %s to %s', 'wp-statistics' ), $args['DateRang']['from'], $args['DateRang']['to'] );
+
+		// Push Basic Chart Data
+		$args['chart'] = array(
+			'days'  => $count_day,
+			'from'  => reset( $days_time_list ),
+			'to'    => end( $days_time_list ),
+			'title' => $title,
+			'label' => $label,
+			'date'  => $date
+		);
+
+		// Push data
+		$args['chart']['data'] = array();
+		foreach ( Event::ls() as $key => $val ) {
+			foreach ( $days_time_list as $d ) {
+				$args['chart']['data'][ $key ][] = Event::get_event_number( array( 'type' => $key, 'user_id' => $args['user_id'], 'day' => $d ) );
+			}
+		}
 
 		// Show Template Page
-		\REALTY_BLOC_LOG\Core\Utility\Admin::get_template( array( 'layout/header', 'layout/title', 'layout/date.range', 'layout/footer' ), $args );
+		\REALTY_BLOC_LOG\Core\Utility\Admin::get_template( array( 'layout/header', 'layout/title', 'layout/date.range', 'user-log', 'layout/footer' ), $args );
 	}
 
 	/**

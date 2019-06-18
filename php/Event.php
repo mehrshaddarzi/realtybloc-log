@@ -129,7 +129,9 @@ class Event {
 
 		// Prepare Item
 		$defaults = array(
-			'type' => '',
+			'type'    => '',
+			'user_id' => '',
+			'day'     => ''
 		);
 		$args     = wp_parse_args( $args, $defaults );
 
@@ -139,6 +141,16 @@ class Event {
 		// Check Type
 		if ( ! empty( $args['type'] ) ) {
 			$where[] = "`type` = '{$args['type']}'";
+		}
+
+		// Check User ID
+		if ( ! empty( $args['user_id'] ) ) {
+			$where[] = "`user_id` = {$args['user_id']}";
+		}
+
+		// Check day
+		if ( ! empty( $args['day'] ) ) {
+			$where[] = "DATE(`date`) = '{$args['day']}'";
 		}
 
 		// Basic SQL

@@ -56,6 +56,10 @@ class Admin {
 		if ( self::in_page( self::$admin_page_slug ) and isset( $_GET['method'] ) ) {
 			add_filter( 'screen_options_show_screen', '__return_false' );
 		}
+		/**
+		 * Disable All Notice From Plugins
+		 */
+		add_action( 'admin_print_scripts', array( $this, 'disable_all_admin_notices' ) );
 	}
 
 	/**
@@ -104,6 +108,9 @@ class Admin {
 			// Load Date Picker
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_localize_script( 'jquery-ui-datepicker', 'wps_i18n_jquery_datepicker', self::localize_jquery_datepicker() );
+
+			// Add Chart Js
+			wp_enqueue_script( 'chart.js', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/chartjs/chart.bundle.min.js' , false, '2.8.0', false );
 
 			// Select 2
 			wp_enqueue_script( 'select2', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/select2/select2.full.min.js', array( 'jquery' ), '4.0.7' );
@@ -351,5 +358,22 @@ class Admin {
 		<?php
 	}
 
+	/**
+	 * Disable All Admin Notice in list table page
+	 */
+	public function disable_all_admin_notices() {
+		global $wp_filter;
+		if ( self::in_page( self::$admin_page_slug ) and ! isset( $_GET['alert'] ) ) {
+			if ( isset( $wp_filter['user_admin_notices'] ) ) {
+				unset( $wp_filter['user_admin_notices'] );
+			}
+			if ( isset( $wp_filter['admin_notices'] ) ) {
+				unset( $wp_filter['admin_notices'] );
+			}
+			if ( isset( $wp_filter['all_admin_notices'] ) ) {
+				unset( $wp_filter['all_admin_notices'] );
+			}
+		}
+	}
 
 }

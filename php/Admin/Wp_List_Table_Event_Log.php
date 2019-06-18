@@ -239,7 +239,7 @@ class Wp_List_Table_Event_Log extends \WP_List_Table {
 				if ( User::exists( $item['user_id'] ) ) {
 
 					$user_inf = User::get( $item['user_id'] );
-					$t        = '<a class="wps-text-danger" target="_blank" href="' . add_query_arg( array( 'page' => Admin::$admin_page_slug, 'method' => 'user-history', 'user_id' => $item['user_id'] ), admin_url( "admin.php" ) ) . '">' . __( "ID", "realty-bloc-log" ) . ': ' . $item['user_id'] . '</a><br />';
+					$t        = '<a class="rbl-text-danger" target="_blank" href="' . add_query_arg( array( 'page' => Admin::$admin_page_slug, 'method' => 'user-history', 'user_id' => $item['user_id'] ), admin_url( "admin.php" ) ) . '">' . __( "ID", "realty-bloc-log" ) . ': ' . $item['user_id'] . '</a><br />';
 					$t        .= '<div>' . __( "Email", "realty-bloc-log" ) . ': ' . $user_inf['user_email'] . '</div>';
 					$t        .= '<div>' . __( "Name", "realty-bloc-log" ) . ': ' . User::get_name( $item['user_id'] ) . '</div>';
 					return $t;
