@@ -30,12 +30,10 @@ class Helper {
 	 */
 	public static function get_list_user_log() {
 		global $wpdb;
-		$query = $wpdb->get_results( "SELECT `user_id` FROM `{$wpdb->prefix}realtybloc_log` GROUP BY `user_id` ORDER BY `user_id`", ARRAY_A );
+		$query = $wpdb->get_results( "SELECT `user_id` FROM `{$wpdb->prefix}realtybloc_log` WHERE `user_id` >0 AND EXISTS (SELECT `ID` FROM `{$wpdb->users}` WHERE {$wpdb->prefix}realtybloc_log.user_id = {$wpdb->users}.ID) GROUP BY `user_id` ORDER BY `user_id`", ARRAY_A );
 		$item  = array();
 		foreach ( $query as $row ) {
-			if ( User::exists( $row['user_id'] ) ) {
-				$item[ $row['user_id'] ] = User::get_name( $row['user_id'] );
-			}
+			$item[ $row['user_id'] ] = User::get_name( $row['user_id'] );
 		}
 
 		return $item;
