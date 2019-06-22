@@ -125,8 +125,8 @@ class Wp_List_Table_Event_Log extends \WP_List_Table {
 
 		//Check Search [ Disabled ]
 		//if ( isset( $_GET['s'] ) and ! empty( $_GET['s'] ) ) {
-			//$search  = sanitize_text_field( $_GET['s'] );
-			//$where[] = "`` LIKE '%{$search}%'";
+		//$search  = sanitize_text_field( $_GET['s'] );
+		//$where[] = "`` LIKE '%{$search}%'";
 		//}
 
 		return $where;
@@ -264,6 +264,27 @@ class Wp_List_Table_Event_Log extends \WP_List_Table {
 						$t = '<div>' . __( "Form ID", "realty-bloc-log" ) . ': ' . $item['value'] . '</div>';
 						$t .= '<div>' . __( "Form Title", "realty-bloc-log" ) . ': ' . ( Post::post_exist( $item['value'] ) ? get_the_title( $item['value'] ) : '-' ) . '</div>';
 						$t .= '<a style="color: #494df5 !important;" target="_blank" href="' . Event\form::get_entry_link( $get_event_data['meta']['entry_id'] ) . '">' . __( "Show Entry", "realty-bloc-log" ) . '</a>';
+						return $t;
+						break;
+
+					case 'view' :
+						// UniQ Url
+						$post_url = rtrim( $item['site'], "/" ) . '/' . ltrim( $get_event_data['meta']['url'], "/" );
+						$exp      = explode( "/", $post_url );
+						$uniq_url = "//" . implode( "/", array_unique( $exp ) );
+
+						// Show
+						$t = '<div>' . __( "Page Title", "realty-bloc-log" ) . ': <a href="' . $uniq_url . '" target="_blank">' . $get_event_data['meta']['title'] . '</a></div>';
+						$t .= '<div>' . __( "Page Type", "realty-bloc-log" ) . ': ' . $item['value'] . '</div>';
+						$t .= '<a style="color: #494df5 !important;" href="#TB_inline?&width=600&height=210&inlineId=show_event_detail_' . $item['ID'] . '" class="thickbox">' . __( "Show Info", "realty-bloc-log" ) . '</a>';
+						$t .= '<div id="show_event_detail_' . $item['ID'] . '" style="display:none;">';
+						$t .= '<table width="100%" class="widefat" style="border: 0;box-shadow: none !important;margin-top: 15px;">';
+						$t .= '<tr><td>' . __( "Page Title", "realty-bloc-log" ) . '</td><td>' . $get_event_data['meta']['title'] . '</td></tr>';
+						$t .= '<tr><td>' . __( "Page Link", "realty-bloc-log" ) . '</td><td><a href="' . $uniq_url . '" target="_blank">' . ltrim( $uniq_url, "/" ) . '</a></td></tr>';
+						$t .= '<tr><td>' . __( "MLS", "realty-bloc-log" ) . '</td><td>' . $get_event_data['meta']['mls'] . '</td></tr>';
+						$t .= '<tr><td>' . __( "Status", "realty-bloc-log" ) . '</td><td>' . $get_event_data['meta']['status'] . '</td></tr>';
+						$t .= '</table>';
+						$t .= '</div>';
 						return $t;
 						break;
 

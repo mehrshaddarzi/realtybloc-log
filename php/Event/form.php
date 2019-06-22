@@ -12,7 +12,7 @@ class form {
 		$form_event = ( isset( \REALTY_BLOC_LOG::$option['form_event'] ) ? \REALTY_BLOC_LOG::$option['form_event'] : array() );
 
 		// List Active Form
-		$active_forms = ( isset( $form_event['form'] ) ? array_keys( $form_event['form'] ) : array() );
+		$active_forms = ( ( isset( $form_event['form'] ) and is_array( $form_event['form'] ) ) ? array_keys( $form_event['form'] ) : array() );
 
 		// Add Hook For Save Form
 		foreach ( $active_forms as $form_id ) {
@@ -31,7 +31,7 @@ class form {
 	public function save_form_event( $fields, $entry, $form_data, $entry_id ) {
 
 		// First Check User is Login
-		if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() and login::user_can_log( get_current_user_id() ) ) {
 
 			// Save event
 			Event::save( array(
@@ -41,7 +41,6 @@ class form {
 					'entry_id' => $entry_id
 				)
 			) );
-
 		}
 	}
 

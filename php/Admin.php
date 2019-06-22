@@ -116,6 +116,10 @@ class Admin {
 			wp_enqueue_script( 'select2', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/select2/select2.full.min.js', array( 'jquery' ), '4.0.7' );
 			wp_enqueue_style( 'select2', \REALTY_BLOC_LOG::$plugin_url . '/dist/css/select2/select2.min.css', array(), '4.0.7' );
 
+			// Add TickBox
+			wp_enqueue_script( 'thickbox' );
+			wp_enqueue_style( 'thickbox' );
+
 			// Load Main Script
 			wp_enqueue_style( 'realty-bloc-log', \REALTY_BLOC_LOG::$plugin_url . '/dist/css/admin.min.css', array(), \REALTY_BLOC_LOG::$plugin_version, 'all' );
 			wp_enqueue_script( 'realty-bloc-log', \REALTY_BLOC_LOG::$plugin_url . '/dist/js/admin.min.js', array( 'jquery' ), self::version(), false );

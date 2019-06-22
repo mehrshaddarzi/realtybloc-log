@@ -70,11 +70,15 @@ class Settings {
 			array(
 				'id'    => 'rbl_forms_event',
 				'title' => __( 'Form Submit Event', 'realty-bloc-log' )
+			),
+			array(
+				'id'    => 'rbl_view_event',
+				'title' => __( 'Page View Event', 'realty-bloc-log' )
 			)
 		);
 
 		$fields = array(
-			'rbl_user_event'           => array(
+			'rbl_user_event'  => array(
 				array(
 					'name'    => 'register',
 					'label'   => __( 'Register User', 'realty-bloc-log' ),
@@ -114,17 +118,33 @@ class Settings {
 					)
 				)
 			),
-			'rbl_forms_event'     => array(
+			'rbl_forms_event' => array(
 				array(
 					'name'    => 'form',
 					'label'   => __( 'Form List', 'realty-bloc-log' ),
 					'desc'    => __( 'which Form do you want to Save Log ?', 'realty-bloc-log' ),
 					'type'    => 'multicheck',
-					'options' => Post::get_list_post(array(
+					'options' => Post::get_list_post( array(
 						'post_type' => 'wpforms'
-					))
+					) )
 				)
-			)
+			),
+			'rbl_view_event'  => array(
+				array(
+					'name'    => 'property',
+					'label'   => __( 'Property', 'realty-bloc-log' ),
+					'desc'    => __( 'Save log Property page', 'realty-bloc-log' ),
+					'type'    => 'checkbox',
+					'default' => 'on'
+				),
+				array(
+					'name'    => 'building',
+					'label'   => __( 'Building', 'realty-bloc-log' ),
+					'desc'    => __( 'Save log Building page', 'realty-bloc-log' ),
+					'type'    => 'checkbox',
+					'default' => 'on'
+				)
+			),
 		);
 
 		$this->setting = new SettingAPI();
